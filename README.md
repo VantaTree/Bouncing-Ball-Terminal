@@ -11,10 +11,12 @@ A bouncing ball in your Termianl
 ./bounce \<ball size> \<map>
 ./bounce \<ball width> \<ball height> \<map>
 ```
+
+### Instructions:
 Backspace to reset ball position but not velocity  
 Escape to exit instaed of ^C
 
-Map.txt:
+**Map.txt:**
 
 5 5  
 11111  
