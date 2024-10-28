@@ -6,9 +6,11 @@ A bouncing ball in your Termianl
 `make bounce`
 
 ### Usage:
-```./bounce \<map>
+```
+./bounce \<map>
 ./bounce \<ball size> \<map>
-./bounce \<ball width> \<ball height> \<map>```
+./bounce \<ball width> \<ball height> \<map>
+```
 Backspace to reset ball position but not velocity
 Escape to exit instaed of ^C
 
