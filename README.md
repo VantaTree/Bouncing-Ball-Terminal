@@ -14,7 +14,7 @@ A bouncing ball in your Termianl
 
 ### Instructions:
 Backspace to reset ball position but not velocity  
-Escape to exit instaed of ^C
+Escape to exit instead of ^C
 
 **Map.txt:**
 ```
@@ -25,6 +25,6 @@ Escape to exit instaed of ^C
 10001
 11111
 ```
-1 - Wall  
-0 - Empty  
-S - Ball start position
+`1` - Wall  
+`0` - Empty  
+`S` - Ball start position
