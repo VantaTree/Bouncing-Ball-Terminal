@@ -7,9 +7,9 @@ A bouncing ball in your Termianl
 
 ### Usage:
 ```
-./bounce \<map>
-./bounce \<ball size> \<map>
-./bounce \<ball width> \<ball height> \<map>
+./bounce <map>
+./bounce <ball size> <map>
+./bounce <ball width> <ball height> <map>
 ```
 
 ### Instructions:
