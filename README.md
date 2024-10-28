@@ -1,6 +1,6 @@
 # Bouncing Ball Terminal
 
-A bouncing ball in your Termianl
+A Bouncing Ball in your Terminal
 
 ### Building:
 `make bounce`
