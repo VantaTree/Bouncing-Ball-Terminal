@@ -1,4 +1,4 @@
-# Bounce Terminal
+# Bouncing Ball Terminal
 
 A bouncing ball in your Termianl
 
