@@ -19,12 +19,12 @@ Escape to exit instead of ^C
 **Map.txt:**
 ```
 5 5
-11111
-10001
-10S01
-10001
-11111
+#####
+#000#
+#0S0#
+#000#
+#####
 ```
-`1` - Wall  
-`0` - Empty  
+`#` - Wall  
+`` - Empty  
 `S` - Ball start position

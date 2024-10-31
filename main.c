@@ -108,12 +108,13 @@ int main(int argc, char *argv[]) {
     // Initialization
     Map *map = initMap(map_name);
     if (map == NULL) {
-        printf("\nExample Map.txt:\n\n5 5\n11111\n10001\n10S01\n10001\n11111\n");
-        printf("\n1 - Wall\n0 - Empty\nS - Ball position\n");
+        printf("\nExample Map.txt:\n");
+        printf("\n<map width> <map height>\n5 5\n#####\n#   #\n# S #\n#   #\n#####\n");
+        printf("\n# - Wall\n  - Empty\nS - Ball position\n");
         printf("\nExited with Error 1\n");
         return 1;
     }
-    Ball *ball = initBall(map->startx, map->starty, ball_width, ball_height, 0.707, 0.707);
+    Ball *ball = initBall(map->startx+0.5, map->starty+0.5, ball_width, ball_height, 0.707, 0.707);
     if (ball == NULL) {
         freeMap(map);
         printf("\nExited with Error 1\n");
@@ -188,8 +189,8 @@ int main(int argc, char *argv[]) {
             }
             if (c == backspace_key) {
                 // Return ball to start pos if Backspace key is pressed
-                ball->x = map->startx - ball->w;
-                ball->y = map->starty - ball->h;
+                ball->x = map->startx + 0.5 - ball->w;
+                ball->y = map->starty + 0.5 - ball->h;
             }
         }
     }

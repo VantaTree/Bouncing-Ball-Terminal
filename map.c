@@ -14,7 +14,7 @@ Map *initMap(char *filename) {
     
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Could not open file %s\n", filename);
+        printf("ERROR: Could not open file %s\n", filename);
         return NULL;
     }
 
@@ -101,18 +101,24 @@ Map *initMap(char *filename) {
             y++;
             x = 0; // Reset column
         } else {
-            if (c != '0' && c != '1' && c != 'S') {
-                printf("ERROR invelid character %d in map %s\n", c, filename);
+            if (c != '#' && c != ' ' && c != 'S') {
+                printf("ERROR: Invalid character %d in map %s\n", c, filename);
                 freeMap(map);
                 fclose(file);
                 return NULL;
             }
             if (c == 'S') {
+                if (map->startx != -1 || map->starty != -1) {
+                    printf("ERROR: Multiple start positions in map %s", filename);
+                    freeMap(map);
+                    fclose(file);
+                    return NULL;
+                }
                 map->startx = x;
                 map->starty = y;
-                c = '0';
+                c = ' ';
             }
-            grid[y][x++] = c - '0';
+            grid[y][x++] = c == '#' ? 1 : 0;
         }
     }
     if (y != height-1) {

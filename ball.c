@@ -6,7 +6,7 @@
 #include "map.h"
 
 void collision(Ball *b, char axis, Map *map);
-bool rectcollide(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh);
+bool rectcollide(float r1x, float r1y, float r1w, float r1h, float r2x, float r2y, float r2w, float r2h);
 
 // Update the ball's posiiton
 void updateBall(Ball *b, Map *map) {
