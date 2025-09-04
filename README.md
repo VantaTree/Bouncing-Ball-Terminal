@@ -15,6 +15,11 @@ A Bouncing Ball in your Terminal
 ### Instructions:
 Backspace to reset ball position but not velocity  
 Escape to exit instead of ^C
+1 - Bounce Mode
+2 - Player Mode
+
+### Controls
+In player mode use WASD or Arrow Keys to control the ball.
 
 **Map.txt:**
 ```

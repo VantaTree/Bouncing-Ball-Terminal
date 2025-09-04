@@ -4,10 +4,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 
 #include "map.h"
 #include "ball.h"
+#include "player.h"
 
 // Cross platform sleep
 #ifdef _WIN32
@@ -26,11 +28,21 @@
 // cross platform khbit setup
 #ifdef _WIN32
     #include <conio.h>   // Windows-specific for _kbhit and _getch
-#else
+    
+    // Default function to get character
+    char getChar() {
+        return _getch();
+    }
+    #else
     #include <unistd.h>
     #include <termios.h>
     #include <fcntl.h>
     
+    // Default function to get character
+    char getChar() {
+        return getchar();
+    }
+
     // Function to set terminal to non-canonical mode for Linux
     void enable_raw_mode() {
         struct termios term;
@@ -114,9 +126,16 @@ int main(int argc, char *argv[]) {
         printf("\nExited with Error 1\n");
         return 1;
     }
-    Ball *ball = initBall(map->startx+0.5, map->starty+0.5, ball_width, ball_height, 0.707, 0.707);
+    Player *player = initPlayer();
+    if (player == NULL) {
+        freeMap(map);
+        printf("\nExited with Error 1\n");
+        return 1;
+    }
+    Ball *ball = initBall(map->startx+0.5, map->starty+0.5, ball_width, ball_height, 0.707, 0.707, 'G');
     if (ball == NULL) {
         freeMap(map);
+        free(player);
         printf("\nExited with Error 1\n");
         return 1;
     }
@@ -150,8 +169,8 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        updateBall(ball, map);
-        drawBall(ball, surface, 'G');
+        updateBall(ball, map, player);
+        drawBall(ball, surface);
 
         // Return cursor to home position
         printf("\033[H");
@@ -174,23 +193,74 @@ int main(int argc, char *argv[]) {
             sleep_ms(sleep_time);
         }
 
+        // Reset player input
+        player->px = 0;
+        player->py = 0;
+
         // Check for key press
         if(_kbhit()){
+            char c = getChar();
             #ifdef _WIN32
-                char c = _getch();
                 char backspace_key = 8;
             #else
-                char c = getchar();
                 char backspace_key = 127;
             #endif
-            if (c == 27) {
-                // Exit if Escape key is pressed
-                break;
-            }
+            bool up_arr = false;
+            bool down_arr = false;
+            bool left_arr = false;
+            bool right_arr = false;
+           
+            #ifdef _WIN32
+                if (c == 0 || c == -32) {
+                    c = getChar();
+                    up_arr = c == 72;
+                    down_arr = c == 80;
+                    left_arr = c == 75;
+                    right_arr = c == 77;
+                    c = 0;
+                }
+                if (c == 27) { break; }
+            #else
+                if (c == 27) { // Escape
+                    c = getChar();
+                    if (c != 91) { // '['
+                        // Exit if Escape key is pressed
+                        break;
+                    }
+                    c = getChar();
+                    up_arr = c == 'A';
+                    down_arr = c == 'B';
+                    left_arr = c == 'D';
+                    right_arr = c == 'C';
+                    c = 0;
+                }
+            #endif
+
             if (c == backspace_key) {
                 // Return ball to start pos if Backspace key is pressed
                 ball->x = map->startx + 0.5 - ball->w;
                 ball->y = map->starty + 0.5 - ball->h;
+            }
+
+            // Change State
+            if (c >= '1' && c <= '2') {
+                if (ball->state != BOUNCE) {
+                    ball->dx = 0.707;
+                    ball->dy = 0.707;
+                }
+                ball->state = c - '1';
+            }
+
+            // Get player input
+            if (c == 'W' || c == 'w' || up_arr) {
+                player->py = -1;
+            } else if (c == 'S' || c == 's' || down_arr) {
+                player->py = 1;
+            }
+            if (c == 'A' || c == 'a' || left_arr) {
+                player->px = -1;
+            } else if (c == 'D' || c == 'd' || right_arr) {
+                player->px = 1;
             }
         }
     }
@@ -202,6 +272,7 @@ int main(int argc, char *argv[]) {
 
     freeMap(map);
     freeBall(ball);
+    freePlayer(player);
 
     #ifndef _WIN32
         disable_raw_mode();  // Restore terminal mode on Linux

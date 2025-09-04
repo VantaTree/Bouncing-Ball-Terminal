@@ -3,42 +3,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ball.h"
+#include "player.h"
 #include "map.h"
 
 void collision(Ball *b, char axis, Map *map);
 bool rectcollide(float r1x, float r1y, float r1w, float r1h, float r2x, float r2y, float r2w, float r2h);
 
 // Update the ball's posiiton
-void updateBall(Ball *b, Map *map) {
+void updateBall(Ball *b, Map *map, Player *player) {
 
-    // Move the ball in x axis
-    b->x += b->dx;
-    collision(b, 'x', map);
-    // Move the ball in y axis
-    b->y += b->dy;
-    collision(b, 'y', map);
+    if (b->state == BOUNCE) { // Bounce state
+        // Move the ball in x axis
+        b->x += b->dx;
+        collision(b, 'x', map);
+        // Move the ball in y axis
+        b->y += b->dy;
+        collision(b, 'y', map);
+    } else if (b->state == PLAYER) { // Player controlled state
+        // Move the ball in x axis
+        b->dx = player->px;
+        b->x += b->dx;
+        collision(b, 'x', map);
+        // Move the ball in y axis
+        b->dy = player->py;
+        b->y += b->dy;
+        collision(b, 'y', map);
+    }
 
 }
 
 // Draw the ball as the marker on the given 2D surface
-void drawBall(Ball *b, char *surface[], char marker) {
+void drawBall(Ball *b, char *surface[]) {
     int ax = b->x;
     int ay = b->y;
     int bx = b->x + b->w;
     int by = b->y + b->h;
     for (int y = ay; y < by; y++){
         for (int x = ax; x < bx; x++){
-            surface[y][x] = marker;
+            surface[y][x] = b->marker;
         }
     }
     // surface[(int) b->y][(int) b->x] = marker;
 }
 
 // Create a new Ball with given position and velocity
-Ball *initBall(float x, float y, float w, float h, float dx, float dy) {
+Ball *initBall(float x, float y, float w, float h, float dx, float dy, char marker) {
     Ball *b = malloc(sizeof(Ball));
     if (b == NULL) {
-        printf("Ball couldn't be malloced\n");
+        printf("Ball couldn't be mallocated\n");
         return NULL;
     }
     b->x = x - w;
@@ -47,6 +59,8 @@ Ball *initBall(float x, float y, float w, float h, float dx, float dy) {
     b->h = h;
     b->dx = dx;
     b->dy = dy;
+    b->marker = marker;
+    b->state = BOUNCE;
     return b;
 }
 
